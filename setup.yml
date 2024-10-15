@@ -1,0 +1,16 @@
+- name: Set up PostgreSQL credentials
+  hosts: localhost
+  tasks:
+    - name: Load PostgreSQL credentials from vault
+      ansible.builtin.include_vars:
+        file: vault.yml
+        name: db_creds
+
+    - name: Create .env file for Docker
+      ansible.builtin.copy:
+        dest: .env
+        content: |
+          POSTGRES_USER={{ db_creds.postgres_user }}
+          POSTGRES_PASSWORD={{ db_creds.postgres_password }}
+          POSTGRES_DB={{ db_creds.postgres_db }}
+        mode: '0644'

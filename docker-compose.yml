@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+   web:
+      depends_on:
+         - postgres
+      build: .
+      command: bash -c "python src/preprocess.py && python src/train.py && python src/predict.py -m RAND_FOREST -t func && coverage run src/unit_tests/test_preprocess.py && coverage run -a src/unit_tests/test_training.py && coverage report -m"
+      environment:
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+         - POSTGRES_DB=${POSTGRES_DB}
+      ports:
+         - 8000:8000
+      image: synphase/big_data_lab_3:latest
+   postgres:
+      image: postgres:latest
+      container_name: postgres
+      environment:
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+         - POSTGRES_DB=${POSTGRES_DB}
+      ports:
+         - "5432:5432"
+      volumes:
+         - pgdata:/var/lib/postgresql/data
+      restart: on-failure
+
+volumes:
+   pgdata:

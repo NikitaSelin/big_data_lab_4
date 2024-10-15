@@ -1,0 +1,9 @@
+ansible-vault
+logging
+pandas
+scikit-learn
+pyyaml
+nltk
+numpy
+coverage
+psycopg2-binary

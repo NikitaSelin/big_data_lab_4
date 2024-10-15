@@ -1,0 +1,5 @@
+outs:
+- md5: 5a3c3a5c615c80737dca8fbb5d95cb25
+  size: 34854057
+  hash: md5
+  path: JEOPARDY_CSV.csv
