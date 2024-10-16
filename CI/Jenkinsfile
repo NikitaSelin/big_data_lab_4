@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDS=credentials('big_data_lab_3')
+        DOCKERHUB_CREDS=credentials('big_data_lab_4')
         VAULT_CREDS=credentials('vault')
         LC_ALL   = "en_US.UTF-8"
         LANG     = "en_US.UTF-8"
@@ -17,13 +17,13 @@ options {
         stage('Clone github repository') {
             steps {
                 cleanWs()
-                sh 'git clone https://github.com/NikitaSelin/big_data_lab_3.git'
+                sh 'git clone https://github.com/NikitaSelin/big_data_lab_4.git'
 			}
 		}
 
         stage('Checkout repo dir') {
             steps {
-                sh 'cd big_data_lab_3 && dir'
+                sh 'cd big_data_lab_4 && dir'
 			}
 	    }
 
@@ -35,24 +35,24 @@ options {
 
         stage('Create environment') {
             steps {
-                sh 'cd big_data_lab_3 && bash create_env.sh'
+                sh 'cd big_data_lab_4 && bash create_env.sh'
             }
         }
 
         stage('Building docker') {
             steps {
-                sh 'cd big_data_lab_3 && docker compose build'
+                sh 'cd big_data_lab_4 && docker compose build'
             }
         }
         stage('Create and run docker container') {
             steps {
-                sh 'cd big_data_lab_3 && docker compose up -d'
+                sh 'cd big_data_lab_4 && docker compose up -d'
             }
         }
 
         stage('Checkout coverage report') {
             steps{
-                dir("big_data_lab_3") {
+                dir("big_data_lab_4") {
                     sh 'docker compose logs -t --tail 10'
                 }
             }
@@ -60,13 +60,15 @@ options {
 
         stage('Push') {
             steps {
-                sh 'docker push synphase/big_data_lab_3:latest'
+                sh 'docker push synphase/big_data_lab_4:latest'
             }
         }
 	}
 
     post {
         always {
+            sh 'cd big_data_lab_4 && rm -f .env && rm -f ansible-password.txt'
+            sh 'docker compose down'
             sh 'docker logout'
         }
     }

@@ -13,4 +13,6 @@
           POSTGRES_USER={{ db_creds.postgres_user }}
           POSTGRES_PASSWORD={{ db_creds.postgres_password }}
           POSTGRES_DB={{ db_creds.postgres_db }}
+          TOPIC_NAME={{ db_creds.topic_name }}
+          PARTITIONS_COUNT={{ db_creds.partitions_count }}
         mode: '0644'

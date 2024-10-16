@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDS=credentials('big_data_lab_3')
+        DOCKERHUB_CREDS=credentials('big_data_lab_4')
         LC_ALL = "en_US.UTF-8"
         LANG    = "en_US.UTF-8"
         LANGUAGE = "en_US.UTF-8"
@@ -26,7 +26,7 @@ options {
         stage('Pull image'){
             steps{
                 sh '''
-                        docker pull synphase/big_data_lab_3:latest
+                        docker pull synphase/big_data_lab_4:latest
                 '''
             }
         }
@@ -34,7 +34,7 @@ options {
         stage('Run container'){
             steps{
                 sh '''
-                        docker run --name big_data_lab_3 -p 80:5556 -d synphase/big_data_lab_3:latest
+                        docker run --name big_data_lab_4 -p 80:5556 -d synphase/big_data_lab_4:latest
                 '''
             }
         }
@@ -42,7 +42,7 @@ options {
 
     post {
         always {
-            sh 'docker stop big_data_lab_3 && docker remove big_data_lab_3 && docker logout'
+            sh 'docker stop big_data_lab_4 && docker remove big_data_lab_4 && docker logout'
         }
     }
 }
