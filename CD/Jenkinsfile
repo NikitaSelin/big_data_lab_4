@@ -31,11 +31,24 @@ options {
             }
         }
 
+        stage('Create environment') {
+            steps {
+                sh 'curl https://raw.githubusercontent.com/NikitaSelin/big_data_lab_4/main/create_env.sh -o create_env.sh'
+                sh 'bash create_env.sh'
+            }
+        }
+
+        stage('Download docker-compose.yml') {
+            steps {
+                sh 'curl https://raw.githubusercontent.com/NikitaSelin/big_data_lab_4/main/docker-compose.yml -o docker-compose.yml'
+            }
+        }
+
         stage('Run container'){
             steps{
-                sh '''
-                        docker run --name big_data_lab_4 -p 80:5556 -d synphase/big_data_lab_4:latest
-                '''
+                sh 'docker compose up -d'
+                sh 'sleep 40'
+                sh 'docker compose logs'
             }
         }
 	}
