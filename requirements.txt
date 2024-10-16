@@ -7,3 +7,4 @@ nltk
 numpy
 coverage
 psycopg2-binary
+kafka-python

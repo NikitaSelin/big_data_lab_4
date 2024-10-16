@@ -3,15 +3,17 @@ services:
    web:
       depends_on:
          - postgres
+         - kafka
       build: .
       command: bash -c "python src/preprocess.py && python src/train.py && python src/predict.py -m RAND_FOREST -t func && coverage run src/unit_tests/test_preprocess.py && coverage run -a src/unit_tests/test_training.py && coverage report -m"
       environment:
          - POSTGRES_USER=${POSTGRES_USER}
          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
          - POSTGRES_DB=${POSTGRES_DB}
+         - TOPIC_NAME=${TOPIC_NAME}
       ports:
          - 8000:8000
-      image: synphase/big_data_lab_3:latest
+      image: synphase/big_data_lab_4:latest
    postgres:
       image: postgres:latest
       container_name: postgres
@@ -24,6 +26,31 @@ services:
       volumes:
          - pgdata:/var/lib/postgresql/data
       restart: on-failure
+   zookeeper:
+      image: bitnami/zookeeper:3.9
+      ports:
+         - "2181:2181"
+      environment:
+         - ALLOW_ANONYMOUS_LOGIN=yes
+      volumes:
+         - zookeeper_data:/bitnami
+   kafka:
+      image: bitnami/kafka:latest
+      ports:
+         - "9092:9092"
+      environment:
+         - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+         - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+         - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:9094
+         - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+         - KAFKA_TOPIC_NAME=${TOPIC_NAME}
+         - KAFKA_TOPIC_PARTITIONS=${PARTITIONS_COUNT}
+      depends_on:
+         - zookeeper
+      volumes:
+         - kafka_data:/bitnami
 
 volumes:
    pgdata:
+   zookeeper_data:
+   kafka_data:
