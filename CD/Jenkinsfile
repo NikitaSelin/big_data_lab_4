@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDS=credentials('big_data_lab_4')
+        VAULT_CREDS=credentials('vault')
         LC_ALL = "en_US.UTF-8"
         LANG    = "en_US.UTF-8"
         LANGUAGE = "en_US.UTF-8"
@@ -34,6 +35,8 @@ options {
         stage('Create environment') {
             steps {
                 sh 'curl https://raw.githubusercontent.com/NikitaSelin/big_data_lab_4/main/create_env.sh -o create_env.sh'
+                sh 'curl https://raw.githubusercontent.com/NikitaSelin/big_data_lab_4/main/setup.yml -o setup.yml'
+                sh 'curl https://raw.githubusercontent.com/NikitaSelin/big_data_lab_4/main/vault.yml -o vault.yml'
                 sh 'bash create_env.sh'
             }
         }
