@@ -68,7 +68,7 @@ options {
     post {
         always {
             sh 'cd big_data_lab_4 && rm -f .env && rm -f ansible-password.txt'
-            sh 'docker compose down'
+            sh 'cd big_data_lab_4 && docker compose down'
             sh 'docker logout'
         }
     }
